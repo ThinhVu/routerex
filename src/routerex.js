@@ -11,7 +11,7 @@ module.exports = function(options) {
             target[p](method, ...args)
             if (router.stack.length) {
               const layer = router.stack[router.stack.length - 1]
-              layer.route.metadata = metadata
+              layer.route.metadata = metadata || {}
             }
           } else {
             target[p](method, metadata, ...args)
