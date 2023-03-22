@@ -9,12 +9,12 @@ module.exports = function(options) {
         return function(method, metadata, ...args) {
           if (metadata && typeof metadata == 'object') {
             target[p](method, ...args)
-            if (router.stack.length) {
-              const layer = router.stack[router.stack.length - 1]
-              layer.route.metadata = metadata || {}
-            }
+            const layer = router.stack[router.stack.length - 1]
+            layer.route.metadata = metadata || {}
           } else {
             target[p](method, metadata, ...args)
+            const layer = router.stack[router.stack.length - 1]
+            layer.route.metadata = {}
           }
         }
       } else {
