@@ -8,6 +8,7 @@ module.exports = function({onMetadataGathered}) {
       if (stack.route) {
         metadatas.push({
           path: path.join(parentPath, stack.route.path),
+          methods: stack.route.methods,
           metadata: stack.route.metadata,
         })
       } else {
