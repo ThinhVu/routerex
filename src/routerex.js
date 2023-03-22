@@ -1,7 +1,7 @@
-const express = require("express");
-const methods = require("methods");
+const express = require("express")
+const methods = require("methods")
 
-export default function RouterX(options) {
+export default function Routerex(options) {
   const router = express.Router(options)
   return new Proxy(router, {
     get(target, p) {
