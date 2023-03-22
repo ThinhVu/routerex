@@ -1,6 +1,6 @@
 const path = require('path');
 
-export default function routeMetadataCollectorFactory({onMetadataGathered}) {
+module.exports = function({onMetadataGathered}) {
   const metadatas = []
 
   function gatherMetadata(parentPath, router) {
