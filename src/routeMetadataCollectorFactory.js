@@ -1,12 +1,11 @@
 const path = require('path');
 
 module.exports = function({onMetadataGathered}) {
-  const metadatas = []
-
   function gatherMetadata(parentPath, router) {
+    const routes = []
     for (const stack of router.stack) {
       if (stack.route) {
-        metadatas.push({
+        routes.push({
           path: path.join(parentPath, stack.route.path),
           methods: stack.route.methods,
           metadata: stack.route.metadata,
@@ -14,15 +13,19 @@ module.exports = function({onMetadataGathered}) {
       } else {
         let currentPath = stack.regexp.toString()
         currentPath = currentPath.substr(3, currentPath.length - 16)
-        gatherMetadata(path.join(parentPath, currentPath), stack.handle)
+        routes.push({
+          path: currentPath,
+          subRoute: gatherMetadata(path.join(parentPath, currentPath), stack.handle)
+        });
       }
     }
+    return routes;
   }
 
   return function (path, ...rest) {
     const router = rest.pop()
-    gatherMetadata(path, router)
-    onMetadataGathered(metadatas)
+    const routes = gatherMetadata(path, router)
+    onMetadataGathered(routes)
     return [path, ...rest, router]
   }
 }
