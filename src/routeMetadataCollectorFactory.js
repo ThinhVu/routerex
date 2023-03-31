@@ -19,9 +19,10 @@ module.exports = function({onMetadataGathered}) {
     }
   }
 
-  return function (path, middlewares, router) {
+  return function (path, ...rest) {
+    const router = rest.pop()
     gatherMetadata(path, router)
     onMetadataGathered(metadatas)
-    return [path, ...middlewares, router]
+    return [path, ...rest, router]
   }
 }
