@@ -8,7 +8,23 @@ module.exports = function(options) {
       if (methods.includes(p)) {
         return function(method, metadata, ...args) {
           if (metadata && typeof metadata == 'object') {
-            target[p](method, ...args)
+            if (options && options.yup) {
+              async function validateInputMiddleware(req, res, next) {
+                try {
+                  await metadata.schema.validate({
+                    body: req.body,
+                    query: req.query,
+                    params: req.params
+                  }, { abortEarly: false })
+                  next()
+                } catch (err) {
+                  next(err)
+                }
+              }
+              target[p](method, validateInputMiddleware, ...args)
+            } else {
+              target[p](method, ...args)
+            }
             const layer = router.stack[router.stack.length - 1]
             layer.route.metadata = metadata || {}
           } else {
